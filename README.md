@@ -1,3 +1,10 @@
+# Add the following
+
+* Add the NewsApi key in the .env file
+
+* Add the firebase config data in the src/config/appConfig.js
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
