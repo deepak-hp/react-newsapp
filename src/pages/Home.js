@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import News from "./News";
 import newsContext from "../context/newsContext";
 import { Redirect } from "react-router";

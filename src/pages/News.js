@@ -1,17 +1,40 @@
-import React, { useContext, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import axios from "axios"
 import { Row, Col, Button, Form, FormGroup, Label, Input, FormText, CardImg, Card, CardBody, CardTitle, CardSubtitle, ButtonGroup } from 'reactstrap'
 import { FaRegStar, FaStar } from "react-icons/fa"
 import { toast } from "react-toastify";
 import newsContext from "../context/newsContext";
+import { getDatabase, ref, child, get } from "firebase/database"
 const News = () => {
     const { user, setUser } = useContext(newsContext);
-    const countries = [{ code: 'in', name: "India" }, { code: 'us', name: "USA" }, { code: 'ca', name: "Canada" }] // load from firebase realtime storage
+    // const countries = [{ code: 'in', name: "India" }, { code: 'us', name: "USA" }, { code: 'ca', name: "Canada" }] // load from firebase realtime storage
+    // load from firebase realtime storage
+    const [countries, setCountires] = useState([{ code: 'in', name: "India" }]) // default to india if in case firebase has some issue
     const [isTopHeadlines, setIsTopHeadlines] = useState(false)
     const [search, setSearch] = useState("")
     const [country, setCountry] = useState("in")
     const [news, setNews] = useState([])
     const [favNews, setFavNews] = useState([]);
+
+
+    useEffect(() => {
+        getCountries();
+    }, [])
+
+    const getCountries = () => {
+        const countriesRef = ref(getDatabase())
+        console.log("ref: " + countriesRef);
+        get(child(countriesRef, "countries/"))
+            .then((snapshot) => {
+                if (snapshot.exists()) {
+                    console.log(...snapshot.val());
+                    setCountires([...snapshot.val()])
+                }
+
+            }).catch(error => {
+                toast("Error while retrivening countries." + error, { type: "error" })
+            })
+    }
 
     const handleNewsType = (event) => {
         if (event.target.value === "everything") {
